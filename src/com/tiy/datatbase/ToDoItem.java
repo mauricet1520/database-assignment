@@ -9,11 +9,22 @@ public class ToDoItem {
     private String text;
     private boolean isDone;
 
+    public int getUserId() {
+        return userId;
+    }
 
-    public ToDoItem(int id, String text, boolean isDone) {
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    private int userId;
+
+
+    public ToDoItem(int id, String text, boolean isDone, int userId) {
         this.id = id;
         this.text = text;
         this.isDone = isDone;
+        this.userId = userId;
     }
 
 

@@ -1,24 +1,32 @@
 package com.tiy.datatbase;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import static org.junit.Assert.assertFalse;
 
 /**
  * Created by crci1 on 1/3/s.
  */
 public class ToDoRunner {
-    static MyDatabase database;
-    Connection connection;
-    ArrayList<ToDoItem> items;
+     static MyDatabase database;
+     Connection connection;
+     static ArrayList<ToDoItem> items;
 
     public static void main(String[] args) throws SQLException {
 
         new ToDoRunner().initItem();
 
+
         boolean repeat = true;
+        ToDoRunner myRunner = new ToDoRunner();
+        myRunner.connection = DriverManager.getConnection("jdbc:h2:./main");
+        items = new ArrayList<>();
+        database = new MyDatabase();
+
+        myRunner.insertItem();
+
         while (repeat) {
 
             Scanner scanner = new Scanner(System.in);
@@ -32,10 +40,10 @@ public class ToDoRunner {
 
             switch (userSelectNum) {
                 case 1:
-                    new ToDoRunner().viewTodos();
+                    myRunner.viewTodos();
                     break;
                 case 2:
-                    new ToDoRunner().enterTask();
+                    myRunner.insertItem();
                     break;
                 case 3:
                     new ToDoRunner().deleteTodos();
@@ -64,10 +72,31 @@ public class ToDoRunner {
 
     //Insert into database
 
-    public void insertItem(String text) throws SQLException {
-        connection = DriverManager.getConnection("jdbc:h2:./main");
+    public void insertItem() throws SQLException {
         initItem();
-        database.insertToDo(connection, text);
+        int userId = -1;
+        String text = null;
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter a username");
+        String holderForUser = scanner.nextLine();
+
+        int user = database.retrieveUserIfExist(connection, holderForUser);
+
+        if (user == -1) {
+            System.out.println("Enter your full name");
+            String holderFullname = scanner.nextLine();
+            userId = database.insertUser(connection, holderForUser, holderFullname);
+            System.out.println("Enter item to do");
+            text = scanner.nextLine();
+        }
+        else {
+            System.out.println("Enter item to do");
+             text = scanner.nextLine();
+
+        }
+        database.insertToDo(connection, text, userId);
+
     }
 
     //Enter to do item
@@ -77,11 +106,10 @@ public class ToDoRunner {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter item to do");
         String holder = scanner.nextLine();
-        insertItem(holder);
         viewTodos();
     }
 
-    //View and update the databasen
+    //View and update the database
 
     public void viewTodos() throws SQLException {
         connection = DriverManager.getConnection("jdbc:h2:./main");
@@ -96,10 +124,17 @@ public class ToDoRunner {
 
             for (ToDoItem itemInLoop : items) {
 
-                itemInLoop = new ToDoItem(items.get(looper).getId(), items.get(looper).getText(), items.get(looper).isDone());
-                System.out.println("id = " + itemInLoop.getId() + " Todo item = " + itemInLoop.getText() + " Completed = " + itemInLoop.isDone());
+                itemInLoop = new ToDoItem(items.get(looper).getId(),
+                        items.get(looper).getText(),
+                        items.get(looper).isDone(),
+                        items.get(looper).getUserId());
+                System.out.println("To do item =id = " + itemInLoop.getId()
+                        + " Todo item = " + itemInLoop.getText()
+                        + " Completed = " + itemInLoop.isDone()
+                        + " UserId = " + itemInLoop.getUserId());
                 looper++;
             }
+            System.out.println();
             Scanner scanner = new Scanner(System.in);
             System.out.println("Enter id to mark completed or 0 to cancel");
             String userInput = scanner.nextLine();
@@ -115,6 +150,8 @@ public class ToDoRunner {
 
 
     }
+
+
 
     //Delete item database
 
@@ -132,8 +169,13 @@ public class ToDoRunner {
             System.out.println();
 
             for (ToDoItem itemInLoop : items) {
-                itemInLoop = new ToDoItem(items.get(looper).getId(), items.get(looper).getText(), items.get(looper).isDone());
-                System.out.println("id = " + itemInLoop.getId() + " Todo item = " + itemInLoop.getText() + " Completed = " + itemInLoop.isDone());
+                itemInLoop = new ToDoItem(items.get(looper).getId(), items.get(looper).getText(), items.get(looper).isDone(),
+                        items.get(looper).getUserId());
+                System.out.println("id = "
+                        + itemInLoop.getId() + " Todo item = "
+                        + itemInLoop.getText()
+                        + " Completed = " + itemInLoop.isDone()
+                        + " UserId =" + itemInLoop.getUserId());
                 looper++;
             }
 
