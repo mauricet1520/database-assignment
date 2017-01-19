@@ -59,7 +59,7 @@ public class MyDatabase {
     //DELETE record by Id
 
     public void deleteToDoById(Connection conn, int theId) throws SQLException {
-        PreparedStatement stmt = conn.prepareStatement("DELETE FROM todos WHERE id = ?");
+        PreparedStatement stmt = conn.prepareStatement("DELETE FROM todos WHERE user_id = ?");
         stmt.setInt(1, theId);
         stmt.execute();
     }
@@ -149,20 +149,24 @@ public class MyDatabase {
 
     }
 
-//    public ArrayList<Users> selectUser(Connection conn) throws SQLException{
+    public Users selectUser(Connection conn, String userName) throws SQLException{
+
 //        ArrayList<Users> users = new ArrayList<>();
-//        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users Where username = ?");
-//
-//        ResultSet results = stmt.executeQuery();
-//
-//        while (results.next()) {
-//            int id = results.getInt("id");
-//            String username = results.getString("username");
-//            String fullname = results.getString("fullname");
-//            users.add(new Users(id, username, fullname));
-//        }
-//        return users;
-//    }
+        Users users= null;
+
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users Where username = ?");
+        stmt.setString(1, userName);
+        ResultSet results = stmt.executeQuery();
+
+        while (results.next()) {
+            int id = results.getInt("id");
+            String username = results.getString("username");
+            String fullname = results.getString("fullname");
+
+             users = new Users(id, username, fullname);
+        }
+        return users;
+    }
 
     public int retrieveUserIfExist(Connection connection, String userName) throws SQLException {
         int id;

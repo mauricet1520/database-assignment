@@ -1,5 +1,6 @@
 package com.tiy.datatbase;
 
+import org.h2.engine.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -213,6 +214,21 @@ public class DatabaseRunnerTest {
         myDatabase.deleteUser(conn, userName);
         retrieveId = myDatabase.retrieveUserIfExist(conn, userName);
         assertEquals(-1, retrieveId);
+
+
+    }
+
+    @Test
+    public void testSelectUser() throws SQLException{
+
+        Connection conn = DriverManager.getConnection("jdbc:h2:./main");
+        String userName = "mauricet1520@gmail.com";
+        String fullname = "MLT";
+
+        int userId = myDatabase.insertUser(conn,userName,fullname);
+
+//        User newUser = myDatabase.selectUser(conn, userName);
+
 
 
     }

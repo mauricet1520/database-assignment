@@ -18,7 +18,6 @@ public class ToDoRunner {
 
         new ToDoRunner().initItem();
 
-
         boolean repeat = true;
         ToDoRunner myRunner = new ToDoRunner();
         myRunner.connection = DriverManager.getConnection("jdbc:h2:./main");
@@ -58,7 +57,6 @@ public class ToDoRunner {
         }
 
     }
-
     //Create the database
 
     public void initItem() throws SQLException {
@@ -93,7 +91,6 @@ public class ToDoRunner {
         else {
             System.out.println("Enter item to do");
              text = scanner.nextLine();
-
         }
         database.insertToDo(connection, text, userId);
 
@@ -180,7 +177,7 @@ public class ToDoRunner {
             }
 
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Enter id to delete completed or 0 to cancel");
+            System.out.println("Enter UserId to delete completed or 0 to cancel");
             String userInput = scanner.nextLine();
             int userInt = Integer.parseInt(userInput);
 

@@ -19,14 +19,12 @@ public class ToDoItem {
 
     private int userId;
 
-
     public ToDoItem(int id, String text, boolean isDone, int userId) {
         this.id = id;
         this.text = text;
         this.isDone = isDone;
         this.userId = userId;
     }
-
 
     public ToDoItem() {
     }
